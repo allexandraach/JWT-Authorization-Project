@@ -18,18 +18,25 @@ app.use(express.json());
 // import middlewares
 const validateData = require('./middlewares/validateData');
 const handleToken = require('./middlewares/handleToken');
-const loginUser = require('./middlewares/loginUser');
-
 
 app.get('', (req, res) => {
     res.send('Login Page');
 });
 
 // used GET instead of POST because user credentials are hard-coded on the server
-app.get('/login', [validateData, handleToken, loginUser]);
+app.get('/login', [validateData, handleToken], (req, res) => {
+    req.authenticated = true;
+    res.redirect('/dashboard');
 
-app.get('/dashboard', (req, res) => {
-    res.send('Login Successful');
 });
 
+app.get('/dashboard', (req, res) => {
+
+    if (req.authenticated) {
+        res.send('Dashboard page');
+    } else {
+        // user accessed the route directly from the url; will prevent direct access like this
+        res.redirect('/login');
+    }
+});
 

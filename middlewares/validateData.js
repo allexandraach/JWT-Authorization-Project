@@ -14,6 +14,9 @@ const validatePassword = util.promisify(bcrypt.compare);
 
 const validateData = async (req, res, next) => {
 
+    // credential will be extracted from the request body
+    // const { username, password } = req.body;
+ 
     if (req.header('Authorization')) {
         // if user has token, skip validating user credentials
         next();
